@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video API - N8N Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .status {
+            background: #10b981;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .endpoints {
+            background: #f7f7f7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .endpoint {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .method.post { background: #fbbf24; color: #92400e; }
+        .method.get { background: #60a5fa; color: #1e3a8a; }
+        .method.delete { background: #f87171; color: #7f1d1d; }
+
+        .url {
+            color: #4b5563;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .test-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .test-button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1f2937;
+            color: #10b981;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            display: none;
+            overflow-x: auto;
+        }
+
+        .upload-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 10px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            background: #2563eb;
+        }
+
+        .file-name {
+            margin-left: 15px;
+            color: #666;
+        }
+
+        .n8n-config {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fef3c7;
+            border-radius: 10px;
+            border: 2px solid #fbbf24;
+        }
+
+        .config-code {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Video API</h1>
+        <p class="subtitle">Sistema de hospedagem de vídeos para N8N</p>
+        <span class="status">✅ Online</span>
+
+        <div class="endpoints">
+            <h3 style="margin-bottom: 15px;">📍 Endpoints Disponíveis</h3>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/.netlify/functions/upload</span>
+                <div style="margin-top: 5px; color: #666; font-size: 0.9em;">Upload de vídeo (multipart/form-data)</div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/.netlify/functions/list</span>
+                <div style="margin-top: 5px; color: #666; font-size: 0.9em;">Listar todos os vídeos</div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/.netlify/functions/health</span>
+                <div style="margin-top: 5px; color: #666; font-size: 0.9em;">Status da API</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3 style="margin-bottom: 15px;">🧪 Teste de Health Check</h3>
+            <button class="test-button" onclick="testHealth()">Testar API</button>
+            <pre class="result" id="healthResult"></pre>
+        </div>
+
+        <div class="upload-section">
+            <h3 style="margin-bottom: 15px;">📤 Teste de Upload</h3>
+            <input type="file" id="fileInput" class="file-input" accept="video/*" onchange="handleFileSelect(event)">
+            <label for="fileInput" class="file-label">Escolher Vídeo</label>
+            <span class="file-name" id="fileName">Nenhum arquivo selecionado</span>
+            <br><br>
+            <button class="test-button" onclick="uploadVideo()" style="display:none;" id="uploadBtn">Fazer Upload</button>
+            <pre class="result" id="uploadResult"></pre>
+        </div>
+
+        <div class="n8n-config">
+            <h3>⚙️ Configuração para N8N</h3>
+            <p style="margin-top: 10px; color: #666;">Use estas configurações no node HTTP Request:</p>
+            <div class="config-code">
+{
+  "method": "POST",
+  "url": "https://logiccos.netlify.app/.netlify/functions/upload",
+  "authentication": "None",
+  "sendBody": true,
+  "bodyContentType": "multipart-form-data",
+  "bodyParameters": {
+    "parameters": [{
+      "parameterType": "formBinaryData",
+      "name": "video",
+      "inputDataFieldName": "data"
+    }]
+  }
+}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testHealth() {
+            const resultDiv = document.getElementById('healthResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testando...';
+
+            try {
+                const response = await fetch('/.netlify/functions/health');
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = 'Erro: ' + error.message;
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('uploadBtn').style.display = 'inline-block';
+            }
+        }
+
+        async function uploadVideo() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Selecione um arquivo primeiro!');
+                return;
+            }
+
+            const resultDiv = document.getElementById('uploadResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Enviando...';
+
+            const formData = new FormData();
+            formData.append('video', file);
+
+            try {
+                const response = await fetch('/.netlify/functions/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = 'Erro: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

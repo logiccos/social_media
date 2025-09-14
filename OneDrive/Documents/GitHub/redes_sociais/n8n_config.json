@@ -1,0 +1,84 @@
+{
+  "video_server": {
+    "subdomain": "videos-n8n-7x9k2.logiccos.com",
+    "endpoints": {
+      "upload": "http://videos-n8n-7x9k2.logiccos.com/upload",
+      "list": "http://videos-n8n-7x9k2.logiccos.com/list",
+      "delete": "http://videos-n8n-7x9k2.logiccos.com/delete/{filename}",
+      "health": "http://videos-n8n-7x9k2.logiccos.com/health",
+      "video_url": "http://videos-n8n-7x9k2.logiccos.com/videos/{filename}"
+    },
+    "n8n_http_request_config": {
+      "upload_video": {
+        "method": "POST",
+        "url": "http://videos-n8n-7x9k2.logiccos.com/upload",
+        "authentication": "None",
+        "sendBody": true,
+        "bodyContentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 300000,
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "list_videos": {
+        "method": "GET",
+        "url": "http://videos-n8n-7x9k2.logiccos.com/list",
+        "authentication": "None",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "delete_video": {
+        "method": "DELETE",
+        "url": "={{$json.delete_url}}",
+        "authentication": "None",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    "response_example": {
+      "upload_success": {
+        "success": true,
+        "url": "http://videos-n8n-7x9k2.logiccos.com/videos/video_1234567890_abc123.mp4",
+        "filename": "video_1234567890_abc123.mp4"
+      },
+      "list_response": {
+        "success": true,
+        "videos": [
+          {
+            "filename": "video_1234567890_abc123.mp4",
+            "url": "http://videos-n8n-7x9k2.logiccos.com/videos/video_1234567890_abc123.mp4"
+          }
+        ]
+      }
+    },
+    "limits": {
+      "max_file_size_mb": 500,
+      "allowed_formats": ["mp4", "mov", "avi", "mkv", "webm"],
+      "max_resolution": "1080p",
+      "optimization": "Instagram compatible (H.264 + AAC)"
+    }
+  }
+}

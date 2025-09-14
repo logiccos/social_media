@@ -1,0 +1,25 @@
+{
+  "name": "social-media-video-api",
+  "version": "1.0.0",
+  "description": "Video hosting API for N8N and Instagram integration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logiccos/social_media.git"
+  },
+  "keywords": [
+    "video",
+    "api",
+    "n8n",
+    "instagram",
+    "netlify"
+  ],
+  "author": "Logiccos",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
