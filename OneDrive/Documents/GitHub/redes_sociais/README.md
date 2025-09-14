@@ -8,12 +8,12 @@ Sistema de hospedagem de vídeos otimizado para N8N e Instagram, hospedado no Ne
 
 ## 📍 URLs de Produção
 
-Após o deploy no Netlify:
+🌐 **Site em Produção**: https://silly-paprenjak-99c91c.netlify.app
 
-- **Site**: `https://[seu-site].netlify.app/videos-n8n-7x9k2/`
-- **API Upload**: `https://[seu-site].netlify.app/.netlify/functions/upload`
-- **API List**: `https://[seu-site].netlify.app/.netlify/functions/list`
-- **API Health**: `https://[seu-site].netlify.app/.netlify/functions/health`
+- **Interface**: https://silly-paprenjak-99c91c.netlify.app/videos-n8n-7x9k2/
+- **API Upload**: https://silly-paprenjak-99c91c.netlify.app/.netlify/functions/upload
+- **API List**: https://silly-paprenjak-99c91c.netlify.app/.netlify/functions/list
+- **API Health**: https://silly-paprenjak-99c91c.netlify.app/.netlify/functions/health
 
 ## 🛠️ Configuração Local
 
